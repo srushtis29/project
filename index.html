@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excess Food Management System</title>
+  <style>
+    html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: url('https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M= ') ;
+    background-size: cover;
+}
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      width: 400px;
+      text-align: center;
+    }
+
+    #homepage {
+       
+      background-size: cover;
+      background-position: center;
+      padding: 40px 20px;
+      border-radius: 15px;
+      box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+
+    h1, h2 {
+      color: inherit;
+    }
+
+    input, button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 90%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: palevioletred;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #c93b70;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .food-template {
+      text-align: left;
+      background-color: #77205a71;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 10px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div id="homepage">
+    <h1>Excess Food Management System</h1>
+    <button onclick="showRegister()">Register</button>
+    <button onclick="showLogin()">Login</button>
+    <button onclick="showAdminLogin()">Admin Login</button>
+  </div>
+
+  <div id="registerPage" class="hidden">
+    <h2>Register</h2>
+    <input type="text" id="regName" placeholder="Name" required><br>
+    <input type="password" id="regPassword" placeholder="Password" required><br>
+    <input type="text" id="regContact" placeholder="Contact No." required><br>
+    <button onclick="register()">Submit</button>
+    <button onclick="goToHomepage()">Cancel</button>
+  </div>
+
+  <div id="loginPage" class="hidden">
+    <h2>Login</h2>
+    <input type="text" id="loginName" placeholder="Name" required><br>
+    <input type="password" id="loginPassword" placeholder="Password" required><br>
+    <button onclick="login()">Submit</button>
+    <button onclick="goToHomepage()">Cancel</button>
+  </div>
+
+  <div id="adminLoginPage" class="hidden">
+    <h2>Admin Login</h2>
+    <input type="text" id="adminName" placeholder="Admin Name" required><br>
+    <input type="password" id="adminPassword" placeholder="Password" required><br>
+    <button onclick="adminLogin()">Submit</button>
+    <button onclick="goToHomepage()">Cancel</button>
+  </div>
+
+  <div id="abcPage" class="hidden">
+    <button onclick="showDonorPage()">Donor</button>
+    <button onclick="showAcceptorPage()">Acceptor</button>
+    <button onclick="goToHomepage()">Logout</button>
+  </div>
+
+  <div id="donorPage" class="hidden">
+    <h2>Donor Page</h2>
+    <input type="text" id="foodName" placeholder="Food Name" required><br>
+    <input type="text" id="quantity" placeholder="Quantity" required><br>
+    <input type="text" id="time" placeholder="Available Time" required><br>
+    <input type="text" id="donorContact" placeholder="Contact No." required><br>
+    <input type="text" id="address" placeholder="Address" required><br>
+    <input type="date" id="expiry" placeholder="Expiry Date" required><br>
+    <button onclick="submitDonorInfo()">Submit</button>
+    <button onclick="goToABCPage()">Cancel</button>
+  </div>
+
+  <div id="acceptorPage" class="hidden">
+    <h2>Acceptor Page</h2>
+    <div id="donorInfo"></div>
+    <button onclick="goToABCPage()">Back</button>
+  </div>
+
+  <div id="adminPage" class="hidden">
+    <h2>Admin Page</h2>
+    <div id="adminDonorInfo"></div>
+    <button onclick="goToHomepage()">Logout</button>
+  </div>
+</div>
+
+<script>
+  function hideAllPages() {
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+  }
+
+  function goToHomepage() {
+    hideAllPages();
+    document.getElementById('homepage').classList.remove('hidden');
+  }
+
+  function showRegister() {
+    hideAllPages();
+    document.getElementById('registerPage').classList.remove('hidden');
+  }
+
+  function showLogin() {
+    hideAllPages();
+    document.getElementById('loginPage').classList.remove('hidden');
+  }
+
+  function showAdminLogin() {
+    hideAllPages();
+    document.getElementById('adminLoginPage').classList.remove('hidden');
+  }
+
+  function goToABCPage() {
+    hideAllPages();
+    document.getElementById('abcPage').classList.remove('hidden');
+  }
+
+  function showDonorPage() {
+    hideAllPages();
+    document.getElementById('donorPage').classList.remove('hidden');
+  }
+
+  function showAcceptorPage() {
+    hideAllPages();
+    document.getElementById('acceptorPage').classList.remove('hidden');
+    displayDonorInfo();
+  }
+
+  function showAdminPage() {
+    hideAllPages();
+    document.getElementById('adminPage').classList.remove('hidden');
+    displayAllDonorInfo();
+  }
+
+  function register() {
+    const name = document.getElementById('regName').value;
+    const password = document.getElementById('regPassword').value;
+    const contact = document.getElementById('regContact').value;
+
+    if (name && validatePassword(password) && validateMobileNumber(contact)) {
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userPassword', password);
+      localStorage.setItem('userContact', contact);
+      alert('Registration Successful!');
+      goToHomepage();
+    }
+  }
+
+  function login() {
+    const name = document.getElementById('loginName').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const storedName = localStorage.getItem('userName');
+    const storedPassword = localStorage.getItem('userPassword');
+
+    if (name === storedName && password === storedPassword) {
+      alert('Login Successful!');
+      goToABCPage();
+    } else {
+      alert('Invalid credentials!');
+    }
+  }
+
+  function adminLogin() {
+    const name = document.getElementById('adminName').value;
+    const pass = document.getElementById('adminPassword').value;
+
+    if (name === 'admin' && pass === 'admin123') {
+      alert('Admin Login Successful!');
+      showAdminPage();
+    } else {
+      alert('Invalid admin credentials!');
+    }
+  }
+
+  function submitDonorInfo() {
+    const foodName = document.getElementById('foodName').value;
+    const quantity = document.getElementById('quantity').value;
+    const time = document.getElementById('time').value;
+    const donorContact = document.getElementById('donorContact').value;
+    const address = document.getElementById('address').value;
+    const expiry = document.getElementById('expiry').value;
+
+    if (foodName && quantity && time && donorContact && address && expiry &&
+        validateDonorMobileNumber(donorContact) && validateExpiryDate(expiry)) {
+
+      const donorData = JSON.parse(localStorage.getItem('donorData')) || [];
+      const timestamp = new Date().getTime();
+      donorData.push({ foodName, quantity, time, donorContact, address, expiry, status: 'Available', timestamp });
+      localStorage.setItem('donorData', JSON.stringify(donorData));
+      alert('Donor information submitted successfully!');
+      goToABCPage();
+
+      setTimeout(() => deleteDonorData(timestamp), 1800000); // 30 minutes
+    } else {
+      alert('Please fill in all fields correctly!');
+    }
+  }
+
+  function displayDonorInfo() {
+    const data = JSON.parse(localStorage.getItem('donorData')) || [];
+    const donorDiv = document.getElementById('donorInfo');
+    donorDiv.innerHTML = data.length === 0 ? '<p>No donations available.</p>' : '';
+
+    data.forEach((d, i) => {
+      donorDiv.innerHTML += `
+        <div class="food-template">
+          <strong>Food Name:</strong> ${d.foodName}<br>
+          <strong>Quantity:</strong> ${d.quantity}<br>
+          <strong>Time:</strong> ${d.time}<br>
+          <strong>Contact:</strong> ${d.donorContact}<br>
+          <strong>Address:</strong> ${d.address}<br>
+          <strong>Expiry:</strong> ${d.expiry}<br>
+          <strong>Status:</strong> ${d.status}<br>
+          <button onclick="acceptFood(${i})" ${d.status === 'Accepted' ? 'disabled' : ''}>Accept</button>
+        </div>`;
+    });
+  }
+
+  function acceptFood(index) {
+    let donorData = JSON.parse(localStorage.getItem('donorData')) || [];
+    if (donorData[index]) {
+      donorData[index].status = 'Accepted';
+      localStorage.setItem('donorData', JSON.stringify(donorData));
+      alert('Food accepted!');
+      displayDonorInfo();
+    }
+  }
+
+  function displayAllDonorInfo() {
+    const data = JSON.parse(localStorage.getItem('donorData')) || [];
+    const adminDiv = document.getElementById('adminDonorInfo');
+    adminDiv.innerHTML = data.length === 0 ? '<p>No donations available.</p>' : '';
+
+    data.forEach((d, i) => {
+      adminDiv.innerHTML += `
+        <div class="food-template">
+          <strong>Food Name:</strong> ${d.foodName}<br>
+          <strong>Quantity:</strong> ${d.quantity}<br>
+          <strong>Time:</strong> ${d.time}<br>
+          <strong>Contact:</strong> ${d.donorContact}<br>
+          <strong>Address:</strong> ${d.address}<br>
+          <strong>Expiry:</strong> ${d.expiry}<br>
+          <strong>Status:</strong> ${d.status}<br>
+          <button onclick="markAsCollected(${i})" ${d.status === 'Collected' ? 'disabled' : ''}>Mark as Collected</button>
+        </div>`;
+    });
+  }
+
+  function markAsCollected(index) {
+    let donorData = JSON.parse(localStorage.getItem('donorData')) || [];
+    if (donorData[index]) {
+      donorData[index].status = 'Collected';
+      localStorage.setItem('donorData', JSON.stringify(donorData));
+      alert('Marked as collected!');
+      displayAllDonorInfo();
+    }
+  }
+
+  function validateMobileNumber(mobile) {
+    const pattern = /^[0-9]{10}$/;
+    if (!pattern.test(mobile)) {
+      alert('Enter a valid 10-digit mobile number!');
+      return false;
+    }
+    return true;
+  }
+
+  function validateDonorMobileNumber(mobile) {
+    return validateMobileNumber(mobile);
+  }
+
+  function validatePassword(password) {
+    const pattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!pattern.test(password)) {
+      alert('Password must contain 8+ chars, 1 letter, 1 number & 1 special char!');
+      return false;
+    }
+    return true;
+  }
+
+  function validateExpiryDate(date) {
+    const today = new Date().toISOString().split('T')[0];
+    if (date < today) {
+      alert('Expiry date must be today or later.');
+      return false;
+    }
+    return true;
+  }
+
+  function deleteDonorData(timestamp) {
+    let data = JSON.parse(localStorage.getItem('donorData')) || [];
+    data = data.filter(d => d.timestamp !== timestamp);
+    localStorage.setItem('donorData', JSON.stringify(data));
+    alert('Donor info deleted after 30 minutes.');
+    displayDonorInfo();
+  }
+
+  // Initialize
+  goToHomepage();
+</script>
+</body>
+</html>
